@@ -1,0 +1,39 @@
+{
+  "name": "e-shop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./backend/server.js",
+    "server": "nodemon ./backend/server.js",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "data:import": "node backend/seeder",
+    "data:destroy": "node backend/seeder -d"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saykat1/e-shop.git"
+  },
+  "keywords": [],
+  "author": "Nur Mohammad Soikat",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saykat1/e-shop/issues"
+  },
+  "homepage": "https://github.com/saykat1/e-shop#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-async-handler": "^1.1.4",
+    "mongoose": "^5.12.14"
+  },
+  "devDependencies": {
+    "colors": "^1.4.0",
+    "concurrently": "^6.2.0",
+    "nodemon": "^2.0.7"
+  }
+}

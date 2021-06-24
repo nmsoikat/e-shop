@@ -1,9 +1,9 @@
 import React from "react";
 import propTypes from "prop-types";
 
-function Ratting({ value, text, color }) {
+function Rating({ value, text, color }) {
   return (
-    <div className="ratting">
+    <div className="rating">
       <span>
         <i
           style={{ color }}
@@ -74,15 +74,15 @@ function Ratting({ value, text, color }) {
   );
 }
 
-Ratting.defaultProps = {
+Rating.defaultProps = {
   color: "#f8e825",
 };
 
 //make warning not break running app, if not match prop types
-Ratting.propTypes = {
+Rating.propTypes = {
   value: propTypes.number.isRequired,
   text: propTypes.string.isRequired,
   color: propTypes.string,
 };
 
-export default Ratting;
+export default Rating;
