@@ -1,25 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 // import products from "../products";
-import { Link } from "react-router-dom";
-import { Row, Col, Image, ListGroup, Button } from "react-bootstrap";
+import { Link} from "react-router-dom";
+import { Row, Col, Image, ListGroup, Button, Form } from "react-bootstrap";
 import Rating from "../components/Rating";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { detailsOfProduct } from "../actions/productAction";
+import Loader from "./../components/Loader";
+import Message from "./../components/Message";
 
-function ProductScreen(props) {
-  // const product = products.find((pd) => pd._id === props.match.params.id);
+function ProductScreen({ history, match }) {
+  const [qty, setQty] = useState(1)
 
-  const [product, setProduct] = useState({});
+  const dispatch = useDispatch();
+  const { loading, error, product } = useSelector(
+    (state) => state.productDetails
+  );
 
   useEffect(() => {
-    const loadSingleProduct = async () => {
-      const { data } = await axios.get(
-        "/api/products/" + props.match.params.id
-      );
-      setProduct(data);
-    };
+    dispatch(detailsOfProduct(match.params.id));
+  }, [dispatch, match]);
 
-    loadSingleProduct();
-  }, [props.match]);
+
+  const addToCartHandler = () => {
+    history.push(`/cart/${match.params.id}?qty=${qty}`)
+  }
 
   return (
     <>
@@ -27,7 +31,11 @@ function ProductScreen(props) {
         Back
       </Link>
 
-      {Object.keys(product).length > 0 ? (
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <Message variant="danger">{error}</Message>
+      ) : Object.keys(product).length > 0 ? (
         <Row>
           <Col md={5}>
             <Image
@@ -44,7 +52,7 @@ function ProductScreen(props) {
               </ListGroup.Item>
               <ListGroup.Item>
                 <Rating
-                  value={product.rating}
+                  value={product.rating || 0}
                   text={product.numReviews + "reviews"}
                 />
               </ListGroup.Item>
@@ -70,11 +78,28 @@ function ProductScreen(props) {
                   </Col>
                 </Row>
               </ListGroup.Item>
+
+              {product.countInStock > 0 && (
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Qty</Col>
+                    <Col>
+                      <Form.Control as="select" onChange={e => setQty(e.target.value)}>
+                        {[...Array(product.countInStock).keys()].map((x) => (
+                          <option key={x+1} value={x+1}>{x+1}</option>
+                        ))}
+                      </Form.Control>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+              )}
+
               <ListGroup.Item>
                 <Button
                   variant="dark"
                   className="w-100"
                   disabled={product.countInStock === 0}
+                  onClick={addToCartHandler}
                 >
                   Add to cart
                 </Button>

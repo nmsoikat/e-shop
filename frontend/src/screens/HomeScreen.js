@@ -1,24 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 // import products from "./../products";
+import {useDispatch, useSelector} from 'react-redux'
 import { Row, Col } from "react-bootstrap";
 import Product from "./../components/Product";
-import axios from "axios";
+import {listOfProducts} from './../actions/productAction';
+import Loader from "../components/Loader";
+import Message from "../components/Message";
+
 
 const HomeScreen = () => {
-  const [products, setProducts] = useState([]);
+
+  const dispatch = useDispatch()
+
+  const {loading, products, error} = useSelector((state) => state.productList)
 
   useEffect(() => {
-    const loadProduct = async () => {
-      const { data } = await axios.get("/api/products");
-      setProducts(data);
-    };
-
-    loadProduct();
-  }, []);
+   dispatch(listOfProducts())
+  }, [dispatch]);
 
   return (
     <>
-      <h2 className="my-3 text-uppercase">Latest Products</h2>
+    <h2 className="my-3 text-uppercase">Latest Products</h2>
+    {loading ? <Loader /> : error ? <Message variant="danger" children={error} /> : 
       <Row>
         {products.map((pd) => {
           return (
@@ -27,7 +30,9 @@ const HomeScreen = () => {
             </Col>
           );
         })}
-      </Row>
+      </Row>}
+   
+      
     </>
   );
 };
