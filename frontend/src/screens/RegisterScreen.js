@@ -7,13 +7,18 @@ import Message from '../components/Message'
 import Loader from '../components/Loader'
 import FormContainer from '../components/FormContainer'
 
-function LoginScreen({ location, history }) {
+function RegisterScreen({ location, history }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [name, setName] = useState('')
+  const [message, setMessage] = useState(null)
 
   const dispatch = useDispatch()
-  const { loading, userInfo, error } = useSelector((state) => state.userLogin)
+
+  const { loading, userInfo, error } = useSelector(
+    (state) => state.userRegister,
+  )
 
   const redirect = location.search ? location.search.split('=')[1] : '/'
 
@@ -31,7 +36,7 @@ function LoginScreen({ location, history }) {
 
   return (
     <FormContainer>
-      <h1>Sign In Here</h1>
+      <h1>Sign Up Here</h1>
       {error && <Message variant="danger">{error}</Message>}
       {loading && <Loader />}
       <Form onSubmit={submitHandler}>
@@ -65,8 +70,18 @@ function LoginScreen({ location, history }) {
           ></Form.Control>
         </Form.Group>
 
-        <Button type="submit" variant="primary" className="mt-3">
-          Sign In
+        <Form.Group controlId="confirmPassword">
+          <Form.Label>Confirm Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Confirm your password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          ></Form.Control>
+        </Form.Group>
+
+        <Button type="submit" variant="success" className="mt-3">
+          Register
         </Button>
       </Form>
 
@@ -82,4 +97,4 @@ function LoginScreen({ location, history }) {
   )
 }
 
-export default LoginScreen
+export default RegisterScreen
