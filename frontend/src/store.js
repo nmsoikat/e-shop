@@ -12,7 +12,10 @@ import {
   userReducers,
   userRegisterReducers,
 } from './reducers/userReducers'
-import { orderCreateReducer } from './reducers/orderReducers.js'
+import {
+  orderCreateReducer,
+  orderDetailsReducer,
+} from './reducers/orderReducers.js'
 
 const reducer = combineReducers({
   productList: productListReducer,
@@ -22,6 +25,7 @@ const reducer = combineReducers({
   userRegister: userRegisterReducers,
   userDetails: userDetailsReducers,
   orderCreate: orderCreateReducer,
+  orderDetails: orderDetailsReducer,
 })
 
 // @load cart data from local-storage

@@ -37,4 +37,35 @@ const addOrder = asyncHandler(async (req, res) => {
   }
 })
 
-export { addOrder }
+// @des     Get order by id
+// @route   GET /api/orders/:id
+// @access  Private
+const getOrderById = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id).populate(
+    'user',
+    'name email',
+  )
+
+  if (order) {
+    res.json(order)
+  } else {
+    res.status(404)
+    throw new Error('Order not found!')
+  }
+})
+
+// @des     Get all order
+// @route   GET /api/orders/all
+// @access  Private
+const getOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find()
+
+  if (orders) {
+    res.json(orders)
+  } else {
+    res.status(404)
+    throw new Error('Orders not found!')
+  }
+})
+
+export { addOrder, getOrderById, getOrders }
