@@ -12,6 +12,8 @@ import ShippingScreen from './screens/ShippingScreen'
 import PaymentScreen from './screens/PaymentScreen'
 import PlaceOrderScreen from './screens/PlaceOrderScreen'
 import OrderScreen from './screens/OrderScreen'
+import PaymentSuccessScreen from './screens/PaymentSuccessScreen'
+import PaymentCancelScreen from './screens/PaymentCancelScreen'
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
       <Header></Header>
       <main className="py-3">
         <Container>
+          <Route path="/payment_cancel/" component={PaymentCancelScreen} />
+          <Route path="/payment_success/" component={PaymentSuccessScreen} />
           <Route path="/order/:id" component={OrderScreen} />
           <Route path="/placeorder" component={PlaceOrderScreen} />
           <Route path="/payment" component={PaymentScreen} />

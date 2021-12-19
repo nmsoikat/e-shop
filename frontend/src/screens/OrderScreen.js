@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import Loader from '../components/Loader'
 import { getOrderDetails } from '../actions/orderAction.js'
+import axios from 'axios'
 
 function OrderScreen({ match }) {
   const orderId = match.params.id
@@ -22,7 +23,7 @@ function OrderScreen({ match }) {
   const orderDetails = useSelector((state) => state.orderDetails)
   const { order, loading, error } = orderDetails
 
-  if (!loading) {
+  if (!loading && order) {
     // Calculate Order
     const addDecimals = (num) => {
       return (Math.round(num * 100) / 100).toFixed(2)
@@ -36,8 +37,27 @@ function OrderScreen({ match }) {
   }
 
   useEffect(() => {
-    dispatch(getOrderDetails(orderId))
-  }, [])
+    if (!order || order._id !== orderId) {
+      dispatch(getOrderDetails(orderId))
+    }
+  }, [dispatch, orderId, order])
+
+  const stripePaymentHandler = async () => {
+    const { data } = await axios({
+      method: 'POST',
+      url: '/create-checkout-session',
+      data: {
+        orderId: order._id,
+      },
+      config: {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    })
+
+    window.location = data.url
+  }
 
   return loading ? (
     <Loader />
@@ -45,7 +65,8 @@ function OrderScreen({ match }) {
     <Message variant="danger">{error}</Message>
   ) : (
     <>
-      <h1>Order: {order._id}</h1>
+      <h1 className="text-success">Order Success</h1>
+      <h2>Order ID: {order._id}</h2>
       <Row>
         <Col md={8}>
           <ListGroup variant="flush">
@@ -152,6 +173,15 @@ function OrderScreen({ match }) {
                   <Col>Total</Col>
                   <Col>${order.totalPrice}</Col>
                 </Row>
+              </ListGroupItem>
+              <ListGroupItem>
+                <Button
+                  onClick={stripePaymentHandler}
+                  className="w-100"
+                  variant="success"
+                >
+                  Go For Payment
+                </Button>
               </ListGroupItem>
             </ListGroup>
           </Card>
